@@ -1,4 +1,5 @@
 from pweb import PWebComponentRegister
+from pweb_auth.common.pweb_auth_init import PWebAuthInit
 
 
 class PWebAuthModule(PWebComponentRegister):
@@ -13,4 +14,4 @@ class PWebAuthModule(PWebComponentRegister):
         pass
 
     def run_on_start(self, pweb_app, config):
-        pass
+        PWebAuthInit().init(pweb_app=pweb_app, config=config)
