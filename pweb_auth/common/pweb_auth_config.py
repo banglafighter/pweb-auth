@@ -1,3 +1,4 @@
+from pweb_auth.common.pweb_auth_interceptor import PWebAuthInterceptor
 from pweb_auth.data.pweb_auth_enum import AuthBase
 from pweb_auth.model.operator_abc import OperatorAbc
 from pweb_auth.model.operator_token_abc import OperatorTokenAbc
@@ -21,3 +22,5 @@ class PWebAuthConfig:
     OPERATOR_CREATE_DTO: PWebRestDTO = None
     OPERATOR_UPDATE_DTO: PWebRestDTO = None
     OPERATOR_READ_DTO: PWebRestDTO = None
+
+    AUTH_INTERCEPTOR: PWebAuthInterceptor = None
