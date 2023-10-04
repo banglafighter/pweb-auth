@@ -20,24 +20,38 @@ class PWebAuthInit:
 
     def merge_auth_config(self):
         if not PWebAuthConfig.OPERATOR_READ_DTO:
-            PWebAuthConfig.OPERATOR_READ_DTO = OperatorReadDefaultDTO()
+            PWebAuthConfig.OPERATOR_READ_DTO = OperatorReadDefaultDTO
 
         if not PWebAuthConfig.LOGIN_RESPONSE_DTO:
             PWebAuthConfig.LOGIN_RESPONSE_DTO = PWebAuthConfig.OPERATOR_READ_DTO
 
         if not PWebAuthConfig.FORGOT_PASSWORD_DTO:
-            PWebAuthConfig.FORGOT_PASSWORD_DTO = self._select_dto_by_system_auth_base(username_base=ForgotPasswordUsernameBaseDefaultDTO(), email_base=ForgotPasswordEmailBaseDefaultDTO())
+            PWebAuthConfig.FORGOT_PASSWORD_DTO = self._select_dto_by_system_auth_base(username_base=ForgotPasswordUsernameBaseDefaultDTO, email_base=ForgotPasswordEmailBaseDefaultDTO)
 
         if not PWebAuthConfig.OPERATOR_CREATE_DTO:
-            PWebAuthConfig.OPERATOR_CREATE_DTO = self._select_dto_by_system_auth_base(username_base=OperatorCreateUsernameBaseDefaultDTO(), email_base=OperatorCreateEmailBaseDefaultDTO())
+            _OperatorCreateDTO = self._select_dto_by_system_auth_base(username_base=OperatorCreateUsernameBaseDefaultDTO, email_base=OperatorCreateEmailBaseDefaultDTO)
+
+            class OperatorCreateDTO(_OperatorCreateDTO):
+                class Meta:
+                    model = PWebAuthConfig.OPERATOR_MODEL
+                    load_instance = True
+
+            PWebAuthConfig.OPERATOR_CREATE_DTO = OperatorCreateDTO
 
         if not PWebAuthConfig.OPERATOR_UPDATE_DTO:
-            PWebAuthConfig.OPERATOR_UPDATE_DTO = self._select_dto_by_system_auth_base(username_base=OperatorUpdateUsernameBaseDefaultDTO(), email_base=OperatorUpdateEmailBaseDefaultDTO())
+            _OperatorUpdateDTO = self._select_dto_by_system_auth_base(username_base=OperatorUpdateUsernameBaseDefaultDTO, email_base=OperatorUpdateEmailBaseDefaultDTO)
+
+            class OperatorUpdateDTO(_OperatorUpdateDTO):
+                class Meta:
+                    model = PWebAuthConfig.OPERATOR_MODEL
+                    load_instance = True
+
+            PWebAuthConfig.OPERATOR_UPDATE_DTO = OperatorUpdateDTO
 
     def merge_config(self, config):
         ObjectHelper.copy_config_property(config, pweb_auth.common.pweb_auth_config.PWebAuthConfig)
-        self.merge_auth_config()
 
     def init(self, pweb_app, config):
         self.merge_config(config=config)
         self.register_model()
+        self.merge_auth_config()

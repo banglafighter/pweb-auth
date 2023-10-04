@@ -18,7 +18,7 @@ class AuthModel:
             class Operator(OperatorAbc):
                 pass
 
-            self.operator = Operator
+            PWebAuthConfig.OPERATOR_MODEL = self.operator = Operator
 
     def init_operator_token(self):
         if PWebAuthConfig.OPERATOR_TOKEN_MODEL:
@@ -27,4 +27,4 @@ class AuthModel:
             class OperatorToken(OperatorTokenAbc):
                 pass
 
-            self.operatorToken = OperatorToken
+            PWebAuthConfig.OPERATOR_TOKEN_MODEL = self.operatorToken = OperatorToken

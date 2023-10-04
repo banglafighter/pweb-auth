@@ -19,7 +19,7 @@ class OperatorSSRService:
 
     def create(self, view_name: str, create_action_url: str, failed_redirect_url: str):
         params = {"button": "Create", "action": create_action_url, "auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
-        return self.form_data_crud.create(view_name=view_name, form=PWebAuthConfig.OPERATOR_CREATE_DTO, redirect_url=failed_redirect_url, params=params)
+        return self.form_data_crud.create(view_name=view_name, form=PWebAuthConfig.OPERATOR_CREATE_DTO(), redirect_url=failed_redirect_url, params=params)
 
     def update(self):
         pass
