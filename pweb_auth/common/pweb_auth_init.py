@@ -6,6 +6,8 @@ from pweb_auth.form_dto.pweb_auth_dto import OperatorReadDefaultDTO, ForgotPassw
     OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
+from pweb_auth.service.operator_ssr_service import OperatorSSRService
+from pweb_form_rest.crud.pweb_form_data_crud import FormDataCRUD
 
 
 class PWebAuthInit:
@@ -60,7 +62,11 @@ class PWebAuthInit:
     def merge_config(self, config):
         ObjectHelper.copy_config_property(config, pweb_auth.common.pweb_auth_config.PWebAuthConfig)
 
+    def init_service_dependencies(self):
+        OperatorSSRService.form_data_crud = FormDataCRUD(model=PWebAuthConfig.OPERATOR_MODEL)
+
     def init(self, pweb_app, config):
         self.merge_config(config=config)
         self.register_model()
         self.merge_auth_config()
+        self.init_service_dependencies()
