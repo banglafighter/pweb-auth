@@ -18,6 +18,32 @@ class PWebAuthInit:
             return username_base
         return email_base
 
+    def init_create_operator_dto(self):
+        if PWebAuthConfig.OPERATOR_CREATE_DTO:
+            return
+
+        _OperatorCreateDTO = self._select_dto_by_system_auth_base(username_base=OperatorCreateUsernameBaseDefaultDTO, email_base=OperatorCreateEmailBaseDefaultDTO)
+
+        class OperatorCreateDTO(_OperatorCreateDTO):
+            class Meta:
+                model = PWebAuthConfig.OPERATOR_MODEL
+                load_instance = True
+
+        PWebAuthConfig.OPERATOR_CREATE_DTO = OperatorCreateDTO
+
+    def init_update_operator_dto(self):
+        if PWebAuthConfig.OPERATOR_UPDATE_DTO:
+            return
+
+        _OperatorUpdateDTO = self._select_dto_by_system_auth_base(username_base=OperatorUpdateUsernameBaseDefaultDTO, email_base=OperatorUpdateEmailBaseDefaultDTO)
+
+        class OperatorUpdateDTO(_OperatorUpdateDTO):
+            class Meta:
+                model = PWebAuthConfig.OPERATOR_MODEL
+                load_instance = True
+
+        PWebAuthConfig.OPERATOR_UPDATE_DTO = OperatorUpdateDTO
+
     def merge_auth_config(self):
         if not PWebAuthConfig.OPERATOR_READ_DTO:
             PWebAuthConfig.OPERATOR_READ_DTO = OperatorReadDefaultDTO
@@ -28,25 +54,8 @@ class PWebAuthInit:
         if not PWebAuthConfig.FORGOT_PASSWORD_DTO:
             PWebAuthConfig.FORGOT_PASSWORD_DTO = self._select_dto_by_system_auth_base(username_base=ForgotPasswordUsernameBaseDefaultDTO, email_base=ForgotPasswordEmailBaseDefaultDTO)
 
-        if not PWebAuthConfig.OPERATOR_CREATE_DTO:
-            _OperatorCreateDTO = self._select_dto_by_system_auth_base(username_base=OperatorCreateUsernameBaseDefaultDTO, email_base=OperatorCreateEmailBaseDefaultDTO)
-
-            class OperatorCreateDTO(_OperatorCreateDTO):
-                class Meta:
-                    model = PWebAuthConfig.OPERATOR_MODEL
-                    load_instance = True
-
-            PWebAuthConfig.OPERATOR_CREATE_DTO = OperatorCreateDTO
-
-        if not PWebAuthConfig.OPERATOR_UPDATE_DTO:
-            _OperatorUpdateDTO = self._select_dto_by_system_auth_base(username_base=OperatorUpdateUsernameBaseDefaultDTO, email_base=OperatorUpdateEmailBaseDefaultDTO)
-
-            class OperatorUpdateDTO(_OperatorUpdateDTO):
-                class Meta:
-                    model = PWebAuthConfig.OPERATOR_MODEL
-                    load_instance = True
-
-            PWebAuthConfig.OPERATOR_UPDATE_DTO = OperatorUpdateDTO
+        self.init_create_operator_dto()
+        self.init_update_operator_dto()
 
     def merge_config(self, config):
         ObjectHelper.copy_config_property(config, pweb_auth.common.pweb_auth_config.PWebAuthConfig)
