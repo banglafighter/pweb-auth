@@ -3,7 +3,8 @@ from ppy_common import ObjectHelper
 from pweb_auth.data.pweb_auth_enum import AuthBase
 from pweb_auth.form_dto.pweb_auth_dto import OperatorReadDefaultDTO, ForgotPasswordEmailBaseDefaultDTO, \
     ForgotPasswordUsernameBaseDefaultDTO, OperatorCreateEmailBaseDefaultDTO, OperatorUpdateEmailBaseDefaultDTO, \
-    OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO
+    OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO, LoginUsernameBaseDefaultDTO, \
+    LoginEmailBaseDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.service.operator_ssr_service import OperatorSSRService
@@ -52,6 +53,9 @@ class PWebAuthInit:
 
         if not PWebAuthConfig.LOGIN_RESPONSE_DTO:
             PWebAuthConfig.LOGIN_RESPONSE_DTO = PWebAuthConfig.OPERATOR_READ_DTO
+
+        if not PWebAuthConfig.LOGIN_DTO:
+            PWebAuthConfig.LOGIN_DTO = self._select_dto_by_system_auth_base(username_base=LoginUsernameBaseDefaultDTO, email_base=LoginEmailBaseDefaultDTO)
 
         if not PWebAuthConfig.FORGOT_PASSWORD_DTO:
             PWebAuthConfig.FORGOT_PASSWORD_DTO = self._select_dto_by_system_auth_base(username_base=ForgotPasswordUsernameBaseDefaultDTO, email_base=ForgotPasswordEmailBaseDefaultDTO)

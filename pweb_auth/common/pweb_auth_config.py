@@ -18,6 +18,7 @@ class PWebAuthConfig:
 
     # Auth
     SYSTEM_AUTH_BASE: AuthBase = AuthBase.EMAIL
+    LOGIN_DTO: PWebRestDTO = None
     LOGIN_RESPONSE_DTO: PWebRestDTO = None
     FORGOT_PASSWORD_DTO: PWebRestDTO = None
     OPERATOR_CREATE_DTO: PWebRestDTO = None

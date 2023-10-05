@@ -1,4 +1,7 @@
+from flask import redirect
+
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
+from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
 from pweb_auth.service.operator_service import OperatorService
 from pweb_form_rest import PWebForm
 from pweb_auth.data.pweb_auth_enum import AuthBase
@@ -9,17 +12,23 @@ class OperatorSSRService:
     form_data_crud: FormDataCRUD = None
     operator_service = OperatorService()
 
-    def login(self):
-        pass
+    def login(self, view_name, success_redirect_url: str):
+        form = PWebAuthConfig.LOGIN_DTO()
+        params = {"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
+        return self.form_data_crud.render(view_name=view_name, params=params, form=form)
 
-    def logout(self):
-        pass
+    def logout(self, logout_redirect_url: str):
+        return redirect(logout_redirect_url)
 
-    def reset_password(self):
-        pass
+    def reset_password(self, view_name, reset_response_view, token: str):
+        form = ResetPasswordDefaultDTO()
+        params = {"token": token}
+        return self.form_data_crud.render(view_name=view_name, params=params, form=form)
 
-    def forgot_password(self):
-        pass
+    def forgot_password(self, view_name, forgot_response_view):
+        form = PWebAuthConfig.FORGOT_PASSWORD_DTO()
+        params = {"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
+        return self.form_data_crud.render(view_name=view_name, params=params, form=form)
 
     def _check_unique(self, form: PWebForm, model_id: int = None):
         if form.is_post_data() and form.is_valid_data():
