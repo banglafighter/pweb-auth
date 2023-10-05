@@ -1,5 +1,4 @@
 from flask import redirect
-
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
 from pweb_auth.service.operator_service import OperatorService
