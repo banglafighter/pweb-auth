@@ -13,18 +13,18 @@ class AuthModel:
 
     def init_operator(self):
         if PWebAuthConfig.OPERATOR_MODEL:
-            self.operator = PWebAuthConfig.OPERATOR_MODEL
+            AuthModel.operator = PWebAuthConfig.OPERATOR_MODEL
         else:
             class Operator(OperatorAbc):
                 pass
 
-            PWebAuthConfig.OPERATOR_MODEL = self.operator = Operator
+            PWebAuthConfig.OPERATOR_MODEL = AuthModel.operator = Operator
 
     def init_operator_token(self):
         if PWebAuthConfig.OPERATOR_TOKEN_MODEL:
-            self.operatorToken = PWebAuthConfig.OPERATOR_TOKEN_MODEL
+            AuthModel.operatorToken = PWebAuthConfig.OPERATOR_TOKEN_MODEL
         else:
             class OperatorToken(OperatorTokenAbc):
                 pass
 
-            PWebAuthConfig.OPERATOR_TOKEN_MODEL = self.operatorToken = OperatorToken
+            PWebAuthConfig.OPERATOR_TOKEN_MODEL = AuthModel.operatorToken = OperatorToken
