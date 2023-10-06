@@ -1,27 +1,37 @@
 from abc import ABC, abstractmethod
 
 
-class PWebAuthNotifyABC(ABC):
+class PWebAuthNotifyOnForgotPasswordRequest(ABC):
     @abstractmethod
-    def create_operator(self):
+    def perform(self):
         pass
 
+
+class PWebAuthNotifyOnResetPasswordFailed(ABC):
     @abstractmethod
-    def login_success(self):
+    def perform(self):
         pass
 
+
+class PWebAuthNotifyOnResetPasswordSuccess(ABC):
     @abstractmethod
-    def login_failed(self):
+    def perform(self):
         pass
 
+
+class PWebAuthNotifyOnLoginFailed(ABC):
     @abstractmethod
-    def reset_password_success(self):
+    def perform(self):
         pass
 
+
+class PWebAuthNotifyOnLoginSuccess(ABC):
     @abstractmethod
-    def reset_password_failed(self):
+    def perform(self):
         pass
 
+
+class PWebAuthNotifyOnCreateOperator(ABC):
     @abstractmethod
-    def forgot_password_request(self):
+    def perform(self):
         pass

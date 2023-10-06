@@ -1,24 +1,37 @@
 from abc import ABC, abstractmethod
+from pweb_auth.model.operator_abc import OperatorAbc
 
 
-class PWebAuthInterceptor(ABC):
+class PWebAuthInterceptOnLogin(ABC):
 
     @abstractmethod
-    def intercept_on_login(self):
+    def perform(self):
         pass
 
-    @abstractmethod
-    def intercept_on_renew_token(self):
-        pass
+
+class PWebAuthCustomLogin(ABC):
 
     @abstractmethod
-    def intercept_on_token_generation(self):
+    def perform(self, login_data: dict) -> OperatorAbc:
         pass
 
-    @abstractmethod
-    def intercept_on_acl_check(self):
-        pass
+
+class PWebAuthInterceptOnACLCheck(ABC):
 
     @abstractmethod
-    def perform_custom_login(self):
+    def perform(self):
+        pass
+
+
+class PWebAuthInterceptOnTokenGeneration(ABC):
+
+    @abstractmethod
+    def perform(self):
+        pass
+
+
+class PWebAuthInterceptOnRenewToken(ABC):
+
+    @abstractmethod
+    def perform(self):
         pass

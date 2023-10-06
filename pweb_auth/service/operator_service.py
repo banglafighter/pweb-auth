@@ -1,7 +1,9 @@
 from ppy_common import DataUtil
+from pweb_auth.common.pweb_auth_util import PWebAuthUtil
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.data.pweb_auth_enum import AuthBase
+from pweb_form_rest import form_rest_exception
 
 
 class OperatorService:
@@ -32,3 +34,47 @@ class OperatorService:
             username = DataUtil.get_dict_value(request_data, "username")
             is_broken_integrity = not self.is_username_available(username=username, model_id=model_id)
         return is_broken_integrity
+
+    def get_operator_by_email(self, email):
+        return AuthModel.operator.query.filter(AuthModel.operator.email == email, AuthModel.operator.isDeleted == False).first()
+
+    def get_operator_by_username(self, username):
+        return AuthModel.operator.query.filter(AuthModel.operator.username == username, AuthModel.operator.isDeleted == False).first()
+
+    def get_operator_by_token(self, token):
+        return AuthModel.operator.query.filter(AuthModel.operator.token == token, AuthModel.operator.isDeleted == False).first()
+
+    def get_operator_by_login_data(self, login_data: dict):
+        auth_base = PWebAuthConfig.SYSTEM_AUTH_BASE
+        if auth_base == AuthBase.EMAIL:
+            email = DataUtil.get_dict_value(login_data, "email")
+            return self.get_operator_by_email(email)
+        elif auth_base == AuthBase.USERNAME:
+            username = DataUtil.get_dict_value(login_data, "username")
+            return self.get_operator_by_username(username)
+        return None
+
+    def validate_password_and_get_operator(self, login_data: dict):
+        password = DataUtil.get_dict_value(login_data, "password")
+        if not password:
+            return None
+        operator = self.get_operator_by_login_data(login_data=login_data)
+        if operator and operator.verify_password(password):
+            return operator
+        return None
+
+    def intercept_login_data(self, operator, login_data: dict):
+        auth_interceptor = PWebAuthUtil.get_auth_interceptor()
+        if not operator:
+            raise form_rest_exception.error_message_exception(message=PWebAuthConfig.INVALID_CREDENTIALS_SM)
+        elif not operator.isVerified:
+            raise form_rest_exception.error_message_exception(message=PWebAuthConfig.ACCOUNT_NOT_VERIFIED_SM)
+        if auth_interceptor:
+            pass
+
+    def login(self, login_data: dict):
+        auth_interceptor = PWebAuthUtil.get_auth_interceptor()
+        if auth_interceptor:
+            operator = auth_interceptor.perform_custom_login(login_data=login_data)
+        else:
+            operator = self.validate_password_and_get_operator(login_data=login_data)
