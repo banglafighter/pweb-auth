@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pweb_auth.model.operator_abc import OperatorAbc
 
 
 class PWebAuthNotifyOnForgotPasswordRequest(ABC):
@@ -21,13 +22,13 @@ class PWebAuthNotifyOnResetPasswordSuccess(ABC):
 
 class PWebAuthNotifyOnLoginFailed(ABC):
     @abstractmethod
-    def perform(self):
+    def perform(self, operator: OperatorAbc, login_data: dict):
         pass
 
 
 class PWebAuthNotifyOnLoginSuccess(ABC):
     @abstractmethod
-    def perform(self):
+    def perform(self, operator: OperatorAbc, login_data: dict):
         pass
 
 

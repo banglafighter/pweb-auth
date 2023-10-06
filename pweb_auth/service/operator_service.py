@@ -63,18 +63,34 @@ class OperatorService:
             return operator
         return None
 
+    def notify_on_login_failed(self, operator, login_data: dict):
+        notify_on_login_failed = PWebAuthUtil.notify_on_login_failed()
+        if notify_on_login_failed:
+            notify_on_login_failed.perform(operator=operator, login_data=login_data)
+
     def intercept_login_data(self, operator, login_data: dict):
-        auth_interceptor = PWebAuthUtil.get_auth_interceptor()
+        on_login = PWebAuthUtil.on_login()
         if not operator:
+            self.notify_on_login_failed(operator=operator, login_data=login_data)
             raise form_rest_exception.error_message_exception(message=PWebAuthConfig.INVALID_CREDENTIALS_SM)
         elif not operator.isVerified:
             raise form_rest_exception.error_message_exception(message=PWebAuthConfig.ACCOUNT_NOT_VERIFIED_SM)
-        if auth_interceptor:
-            pass
+
+        if on_login:
+            response = on_login.perform(operator=operator, login_data=login_data)
+            if response:
+                return response
+
+        notify_on_login_success = PWebAuthUtil.notify_on_login_success()
+        if notify_on_login_success:
+            notify_on_login_success.perform(operator=operator, login_data=login_data)
+
+        return operator
 
     def login(self, login_data: dict):
-        auth_interceptor = PWebAuthUtil.get_auth_interceptor()
-        if auth_interceptor:
-            operator = auth_interceptor.perform_custom_login(login_data=login_data)
+        custom_login = PWebAuthUtil.custom_login()
+        if custom_login:
+            operator = custom_login.perform(login_data=login_data)
         else:
             operator = self.validate_password_and_get_operator(login_data=login_data)
+        return self.intercept_login_data(operator=operator, login_data=login_data)

@@ -5,7 +5,7 @@ from pweb_auth.model.operator_abc import OperatorAbc
 class PWebAuthInterceptOnLogin(ABC):
 
     @abstractmethod
-    def perform(self):
+    def perform(self, operator: OperatorAbc, login_data: dict):
         pass
 
 
