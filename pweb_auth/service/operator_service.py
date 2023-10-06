@@ -1,12 +1,14 @@
-from ppy_common import DataUtil
+from ppy_common import DataUtil, PyCommon
 from pweb_auth.common.pweb_auth_util import PWebAuthUtil
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.data.pweb_auth_enum import AuthBase
+from pweb_auth.security.pweb_jwt import PWebJWT
 from pweb_form_rest import form_rest_exception
 
 
 class OperatorService:
+    pweb_jwt: PWebJWT = PWebJWT()
 
     def is_username_available(self, username: str, model_id: int = None):
         operator = AuthModel.operator.query.filter(AuthModel.operator.username == username).first()
@@ -41,16 +43,20 @@ class OperatorService:
     def get_operator_by_username(self, username):
         return AuthModel.operator.query.filter(AuthModel.operator.username == username, AuthModel.operator.isDeleted == False).first()
 
+    def get_operator_by_id(self, model_id):
+        return AuthModel.operator.query.filter(AuthModel.operator.id == model_id, AuthModel.operator.isDeleted == False).first()
+
     def get_operator_by_token(self, token):
         return AuthModel.operator.query.filter(AuthModel.operator.token == token, AuthModel.operator.isDeleted == False).first()
 
-    def get_operator_by_login_data(self, login_data: dict):
+
+    def get_operator_by_dict_data(self, dict_data: dict):
         auth_base = PWebAuthConfig.SYSTEM_AUTH_BASE
         if auth_base == AuthBase.EMAIL:
-            email = DataUtil.get_dict_value(login_data, "email")
+            email = DataUtil.get_dict_value(dict_data, "email")
             return self.get_operator_by_email(email)
         elif auth_base == AuthBase.USERNAME:
-            username = DataUtil.get_dict_value(login_data, "username")
+            username = DataUtil.get_dict_value(dict_data, "username")
             return self.get_operator_by_username(username)
         return None
 
@@ -58,7 +64,7 @@ class OperatorService:
         password = DataUtil.get_dict_value(login_data, "password")
         if not password:
             return None
-        operator = self.get_operator_by_login_data(login_data=login_data)
+        operator = self.get_operator_by_dict_data(dict_data=login_data)
         if operator and operator.verify_password(password):
             return operator
         return None
@@ -94,3 +100,55 @@ class OperatorService:
         else:
             operator = self.validate_password_and_get_operator(login_data=login_data)
         return self.intercept_login_data(operator=operator, login_data=login_data)
+
+    def forgot_password(self, password_request: dict):
+        operator = self.get_operator_by_dict_data(dict_data=password_request)
+        if not operator:
+            return False
+
+        operator.token = PyCommon.get_random() + str(operator.id)
+        validity = self.pweb_jwt.get_token_validity(PWebAuthConfig.RESET_PASSWORD_TOKEN_VALID_MIN)
+        token = self.pweb_jwt.get_token(validity, {"token": operator.token})
+        operator.save()
+
+        forgot_password_request = PWebAuthUtil.notify_on_forgot_password_request()
+        if forgot_password_request:
+            return forgot_password_request.perform(operator=operator, reset_token=token)
+        return False
+
+    def set_password_by_token(self, token: str, new_password: str):
+        payload = self.pweb_jwt.validate_token(token)
+        if payload and "token" in payload:
+            reset_password_success = PWebAuthUtil.notify_on_reset_password_success()
+            operator = self.get_operator_by_token(payload["token"])
+            if operator:
+                operator.password = new_password
+                operator.token = None
+                operator.save()
+                if reset_password_success:
+                    reset_password_success.perform(operator=operator)
+                return True
+        reset_password_failed = PWebAuthUtil.notify_on_reset_password_failed()
+        if reset_password_failed:
+            reset_password_failed.perform(reset_token=token)
+        return False
+
+    def admin_reset_password(self, operator_id, password):
+        operator = self.get_operator_by_id(model_id=operator_id)
+        if not operator:
+            return False
+        operator.password = password
+        operator.save()
+        return True
+
+    def change_password(self, operator_id, current_password, new_password):
+        operator = self.get_operator_by_id(model_id=operator_id)
+        if not operator:
+            return False
+
+        if not operator.verify_password(current_password):
+            return False
+
+        operator.password = new_password
+        operator.save()
+        return True

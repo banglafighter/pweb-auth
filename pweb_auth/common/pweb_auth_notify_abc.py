@@ -4,19 +4,19 @@ from pweb_auth.model.operator_abc import OperatorAbc
 
 class PWebAuthNotifyOnForgotPasswordRequest(ABC):
     @abstractmethod
-    def perform(self):
+    def perform(self, operator: OperatorAbc, reset_token: str) -> bool:
         pass
 
 
 class PWebAuthNotifyOnResetPasswordFailed(ABC):
     @abstractmethod
-    def perform(self):
+    def perform(self, reset_token: str):
         pass
 
 
 class PWebAuthNotifyOnResetPasswordSuccess(ABC):
     @abstractmethod
-    def perform(self):
+    def perform(self, operator: OperatorAbc):
         pass
 
 
