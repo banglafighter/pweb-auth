@@ -19,7 +19,7 @@ def get_dependencies():
 
 setup(
     name='pweb-auth',
-    version='1.0.0',
+    version='0.0.1',
     url='https://github.com/problemfighter/pweb-auth',
     license='Apache 2.0',
     author='Problem Fighter',
