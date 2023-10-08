@@ -11,7 +11,7 @@ env = os.environ.get('source')
 def get_dependencies():
     dependency = ["bcrypt==4.0.1", "PyJWT==2.8.0"]
 
-    if env and env == "dev":
+    if env and env == "code":
         return dependency
 
     return dependency + ["pweb-orm", "pweb-form-rest"]
