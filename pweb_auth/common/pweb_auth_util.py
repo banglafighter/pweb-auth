@@ -1,5 +1,5 @@
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
-from pweb_auth.common.pweb_auth_interceptor import PWebAuthCustomLogin, PWebAuthInterceptOnLogin, \
+from pweb_auth.common.pweb_auth_interceptor_abc import PWebAuthCustomLogin, PWebAuthInterceptOnLogin, \
     PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken
 from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest, \
     PWebAuthNotifyOnResetPasswordFailed, PWebAuthNotifyOnResetPasswordSuccess, PWebAuthNotifyOnLoginFailed, \
@@ -15,26 +15,26 @@ class PWebAuthUtil:
 
     @staticmethod
     def on_login() -> PWebAuthInterceptOnLogin | None:
-        if PWebAuthConfig.AUTH_INTERCEPTOR_ON_LOGIN and isinstance(PWebAuthConfig.AUTH_INTERCEPTOR_ON_LOGIN, PWebAuthInterceptOnLogin):
-            return PWebAuthConfig.AUTH_INTERCEPTOR_ON_LOGIN
+        if PWebAuthConfig.AUTH_INTERCEPT_ON_LOGIN and isinstance(PWebAuthConfig.AUTH_INTERCEPT_ON_LOGIN, PWebAuthInterceptOnLogin):
+            return PWebAuthConfig.AUTH_INTERCEPT_ON_LOGIN
         return None
 
     @staticmethod
     def on_acl_check() -> PWebAuthInterceptOnACLCheck | None:
-        if PWebAuthConfig.AUTH_INTERCEPTOR_ON_ACL_CHECK and isinstance(PWebAuthConfig.AUTH_INTERCEPTOR_ON_ACL_CHECK, PWebAuthInterceptOnACLCheck):
-            return PWebAuthConfig.AUTH_INTERCEPTOR_ON_ACL_CHECK
+        if PWebAuthConfig.AUTH_INTERCEPT_ON_ACL_CHECK and isinstance(PWebAuthConfig.AUTH_INTERCEPT_ON_ACL_CHECK, PWebAuthInterceptOnACLCheck):
+            return PWebAuthConfig.AUTH_INTERCEPT_ON_ACL_CHECK
         return None
 
     @staticmethod
     def on_token_generation() -> PWebAuthInterceptOnTokenGeneration | None:
-        if PWebAuthConfig.AUTH_INTERCEPTOR_ON_TOKEN_GENERATION and isinstance(PWebAuthConfig.AUTH_INTERCEPTOR_ON_TOKEN_GENERATION, PWebAuthInterceptOnTokenGeneration):
-            return PWebAuthConfig.AUTH_INTERCEPTOR_ON_TOKEN_GENERATION
+        if PWebAuthConfig.AUTH_INTERCEPT_ON_TOKEN_GENERATION and isinstance(PWebAuthConfig.AUTH_INTERCEPT_ON_TOKEN_GENERATION, PWebAuthInterceptOnTokenGeneration):
+            return PWebAuthConfig.AUTH_INTERCEPT_ON_TOKEN_GENERATION
         return None
 
     @staticmethod
     def on_renew_token() -> PWebAuthInterceptOnRenewToken | None:
-        if PWebAuthConfig.AUTH_INTERCEPTOR_ON_RENEW_TOKEN and isinstance(PWebAuthConfig.AUTH_INTERCEPTOR_ON_RENEW_TOKEN, PWebAuthInterceptOnRenewToken):
-            return PWebAuthConfig.AUTH_INTERCEPTOR_ON_RENEW_TOKEN
+        if PWebAuthConfig.AUTH_INTERCEPT_ON_RENEW_TOKEN and isinstance(PWebAuthConfig.AUTH_INTERCEPT_ON_RENEW_TOKEN, PWebAuthInterceptOnRenewToken):
+            return PWebAuthConfig.AUTH_INTERCEPT_ON_RENEW_TOKEN
         return None
 
     @staticmethod

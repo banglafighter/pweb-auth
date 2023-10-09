@@ -1,12 +1,14 @@
 import pweb_auth.common.pweb_auth_config
 from ppy_common import ObjectHelper
 from pweb_auth.data.pweb_auth_enum import AuthBase
+from pweb_auth.data.pweb_auth_registry import PWebAuthRegistry
 from pweb_auth.form_dto.pweb_auth_dto import OperatorReadDefaultDTO, ForgotPasswordEmailBaseDefaultDTO, \
     ForgotPasswordUsernameBaseDefaultDTO, OperatorCreateEmailBaseDefaultDTO, OperatorUpdateEmailBaseDefaultDTO, \
     OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO, LoginUsernameBaseDefaultDTO, \
     LoginEmailBaseDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
+from pweb_auth.security.pweb_auth_interceptor import PWebAuthInterceptor
 from pweb_auth.service.operator_ssr_service import OperatorSSRService
 from pweb_form_rest.crud.pweb_form_data_crud import FormDataCRUD
 
@@ -69,8 +71,25 @@ class PWebAuthInit:
     def init_service_dependencies(self):
         OperatorSSRService.form_data_crud = FormDataCRUD(model=PWebAuthConfig.OPERATOR_MODEL)
 
+    def init_auth_interceptor(self, pweb_app):
+        if not PWebAuthConfig.IS_ENABLE_AUTH or not pweb_app:
+            return
+
+        if not PWebAuthConfig.AUTH_INTERCEPTOR or not isinstance(PWebAuthConfig.AUTH_INTERCEPTOR, PWebAuthInterceptor):
+            PWebAuthConfig.AUTH_INTERCEPTOR = PWebAuthInterceptor()
+
+        if PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH and isinstance(PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH, list):
+            PWebAuthRegistry.SKIP_START_WITH_URL_LIST += PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH
+
+        if PWebAuthConfig.SKIP_URL_FROM_AUTH and isinstance(PWebAuthConfig.SKIP_URL_FROM_AUTH, list):
+            PWebAuthRegistry.SKIP_URL_LIST += PWebAuthConfig.SKIP_URL_FROM_AUTH
+
+        PWebAuthRegistry.add_url_in_skip(PWebAuthConfig.SSR_UNAUTHORIZED_REDIRECT_URL)
+        pweb_app.before_request_funcs.setdefault(None, []).append(PWebAuthConfig.AUTH_INTERCEPTOR.intercept)
+
     def init(self, pweb_app, config):
         self.merge_config(config=config)
         self.register_model()
         self.merge_auth_config()
         self.init_service_dependencies()
+        self.init_auth_interceptor(pweb_app=pweb_app)

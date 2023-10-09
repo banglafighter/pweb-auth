@@ -1,5 +1,6 @@
-from pweb_auth.common.pweb_auth_interceptor import PWebAuthInterceptOnLogin, PWebAuthCustomLogin, \
-    PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken
+from pweb_auth.common.pweb_auth_interceptor_abc import PWebAuthInterceptOnLogin, PWebAuthCustomLogin, \
+    PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken, \
+    PWebAuthBaseInterceptor
 from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest, \
     PWebAuthNotifyOnResetPasswordFailed, PWebAuthNotifyOnResetPasswordSuccess, PWebAuthNotifyOnLoginFailed, \
     PWebAuthNotifyOnLoginSuccess, PWebAuthNotifyOnCreateOperator
@@ -29,11 +30,17 @@ class PWebAuthConfig:
     OPERATOR_READ_DTO: PWebRestDTO = None
 
     # Auth Interceptors
-    AUTH_INTERCEPTOR_ON_LOGIN: PWebAuthInterceptOnLogin = None
+    IS_ENABLE_AUTH: bool = True
+    SSR_UNAUTHORIZED_REDIRECT_URL = "/auth/login"
+    REST_URL_START_WITH = "api"
+    SKIP_URL_FROM_AUTH: list = []
+    SKIP_START_WITH_URL_FROM_AUTH: list = []
+    AUTH_INTERCEPTOR: PWebAuthBaseInterceptor = None
+    AUTH_INTERCEPT_ON_LOGIN: PWebAuthInterceptOnLogin = None
     AUTH_CUSTOM_LOGIN: PWebAuthCustomLogin = None
-    AUTH_INTERCEPTOR_ON_ACL_CHECK: PWebAuthInterceptOnACLCheck = None
-    AUTH_INTERCEPTOR_ON_TOKEN_GENERATION: PWebAuthInterceptOnTokenGeneration = None
-    AUTH_INTERCEPTOR_ON_RENEW_TOKEN: PWebAuthInterceptOnRenewToken = None
+    AUTH_INTERCEPT_ON_ACL_CHECK: PWebAuthInterceptOnACLCheck = None
+    AUTH_INTERCEPT_ON_TOKEN_GENERATION: PWebAuthInterceptOnTokenGeneration = None
+    AUTH_INTERCEPT_ON_RENEW_TOKEN: PWebAuthInterceptOnRenewToken = None
 
     # Auth Notification
     AUTH_NOTIFY_ON_FORGOT_PASSWORD_REQUEST: PWebAuthNotifyOnForgotPasswordRequest = None

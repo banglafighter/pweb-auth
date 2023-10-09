@@ -2,6 +2,13 @@ from abc import ABC, abstractmethod
 from pweb_auth.model.operator_abc import OperatorAbc
 
 
+class PWebAuthBaseInterceptor(ABC):
+
+    @abstractmethod
+    def intercept(self):
+        pass
+
+
 class PWebAuthInterceptOnLogin(ABC):
 
     @abstractmethod
