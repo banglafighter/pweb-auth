@@ -12,8 +12,15 @@ class OperatorSSRService:
     operator_service = OperatorService()
 
     def login(self, view_name, success_redirect_url: str):
-        form = PWebAuthConfig.LOGIN_DTO()
+        form: PWebForm = PWebAuthConfig.LOGIN_DTO()
         params = {"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
+        try:
+            if form.is_valid_data_submit():
+                login_data = form.get_request_data()
+                login_response = self.operator_service.login(login_data=login_data)
+                print(login_response)
+        except Exception as e:
+            self.form_data_crud.handle_various_exception(exception=e, form=form)
         return self.form_data_crud.render(view_name=view_name, params=params, form=form)
 
     def logout(self, logout_redirect_url: str):

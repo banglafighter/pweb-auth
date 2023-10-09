@@ -47,3 +47,4 @@ class PWebAuthConfig:
     INVALID_CREDENTIALS_SM = "Invalid Credentials! Please enter valid Credential"
     ACCOUNT_NOT_VERIFIED_SM = "Sorry your account has not been verified."
     NOT_AUTHORIZE_SM = "You are not Authorize for Access."
+    CHECK_VALIDATION_ERROR_SM = "Please check the validation error"
