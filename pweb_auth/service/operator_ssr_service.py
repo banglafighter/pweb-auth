@@ -1,4 +1,6 @@
 from flask import redirect, flash
+
+from ppy_common import DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
 from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth
@@ -35,12 +37,33 @@ class OperatorSSRService:
     def reset_password(self, view_name, reset_response_view, token: str):
         form = ResetPasswordDefaultDTO()
         params = {"token": token}
-        return self.form_data_crud.render(view_name=view_name, params=params, form=form)
+        render_view = view_name
+        try:
+            if form.is_valid_data_submit():
+                form_data = form.get_request_data()
+                new_password = DataUtil.get_dict_value(form_data, "newPassword")
+                submitted_token = DataUtil.get_dict_value(form_data, "token")
+                is_reset = self.operator_service.set_password_by_token(token=submitted_token, new_password=new_password)
+                params["is_reset"] = is_reset
+                render_view = reset_response_view
+            elif form.is_get_data():
+                form.set_value("token", token)
+        except Exception as e:
+            self.form_data_crud.handle_various_exception(exception=e, form=form)
+        return self.form_data_crud.render(view_name=render_view, params=params, form=form)
 
     def forgot_password(self, view_name, forgot_response_view):
         form = PWebAuthConfig.FORGOT_PASSWORD_DTO()
         params = {"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
-        return self.form_data_crud.render(view_name=view_name, params=params, form=form)
+        render_view = view_name
+        try:
+            if form.is_valid_data_submit():
+                form_data = form.get_request_data()
+                self.operator_service.forgot_password(password_request=form_data)
+                render_view = forgot_response_view
+        except Exception as e:
+            self.form_data_crud.handle_various_exception(exception=e, form=form)
+        return self.form_data_crud.render(view_name=render_view, params=params, form=form)
 
     def _check_unique(self, form: PWebForm, model_id: int = None):
         if form.is_post_data() and form.is_valid_data():

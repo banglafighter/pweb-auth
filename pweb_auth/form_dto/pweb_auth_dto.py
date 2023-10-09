@@ -78,7 +78,7 @@ class RefreshTokenResponseDefaultDTO(PWebForm):
 class ResetPasswordDefaultDTO(PWebForm):
     newPassword = fields.String(required=True, error_messages={"required": "Please enter new password."}, type="password")
     confirmPassword = fields.String(required=True, error_messages={"required": "Please enter confirm password."}, type="password")
-    token = fields.String(required=True, error_messages={"required": "Please enter token."})
+    token = fields.String(required=True, error_messages={"required": "Please enter token."}, type="hidden", isLabel=False)
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
