@@ -1,5 +1,4 @@
 from flask import redirect, flash
-
 from ppy_common import DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
