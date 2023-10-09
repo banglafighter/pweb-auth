@@ -1,6 +1,7 @@
-from flask import redirect
+from flask import redirect, flash
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
+from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth
 from pweb_auth.service.operator_service import OperatorService
 from pweb_form_rest import PWebForm
 from pweb_auth.data.pweb_auth_enum import AuthBase
@@ -10,6 +11,7 @@ from pweb_form_rest.crud.pweb_form_data_crud import FormDataCRUD
 class OperatorSSRService:
     form_data_crud: FormDataCRUD = None
     operator_service = OperatorService()
+    pweb_ssr_auth = PWebSSRAuth()
 
     def login(self, view_name, success_redirect_url: str):
         form: PWebForm = PWebAuthConfig.LOGIN_DTO()
@@ -17,13 +19,17 @@ class OperatorSSRService:
         try:
             if form.is_valid_data_submit():
                 login_data = form.get_request_data()
-                login_response = self.operator_service.login(login_data=login_data)
-                print(login_response)
+                operator = self.operator_service.login(login_data=login_data)
+                if self.pweb_ssr_auth.perform_login_process(operator=operator):
+                    return redirect(success_redirect_url)
+                else:
+                    flash(PWebAuthConfig.UNABLE_PROCESS_LOGIN_SM, "error")
         except Exception as e:
             self.form_data_crud.handle_various_exception(exception=e, form=form)
         return self.form_data_crud.render(view_name=view_name, params=params, form=form)
 
     def logout(self, logout_redirect_url: str):
+        self.pweb_ssr_auth.logout()
         return redirect(logout_redirect_url)
 
     def reset_password(self, view_name, reset_response_view, token: str):

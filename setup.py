@@ -14,7 +14,7 @@ def get_dependencies():
     if env and env == "code":
         return dependency
 
-    return dependency + ["pweb-orm", "pweb-form-rest"]
+    return dependency + ["pweb-orm", "pweb-form-rest", "ppy-jsonyml"]
 
 
 setup(
