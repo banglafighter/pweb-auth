@@ -54,5 +54,6 @@ class PWebAuthConfig:
     INVALID_CREDENTIALS_SM = "Invalid Credentials! Please enter valid Credential"
     ACCOUNT_NOT_VERIFIED_SM = "Sorry your account has not been verified."
     NOT_AUTHORIZE_SM = "You are not Authorize for Access."
+    LOGIN_FIRST_SM = "Please login before accessing restricted content"
     CHECK_VALIDATION_ERROR_SM = "Please check the validation error"
     UNABLE_PROCESS_LOGIN_SM = "Please check your data. Unable to process login"

@@ -34,7 +34,7 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
     def check_ssr_auth(self):
         pweb_ssr_auth: PWebSSRAuth | None = PWebSSRAuth().get_auth_session()
         if not pweb_ssr_auth or not PWebSSRAuth().is_logged_in():
-            flash(PWebAuthConfig.NOT_AUTHORIZE_SM, "error")
+            flash(PWebAuthConfig.LOGIN_FIRST_SM, "error")
             return redirect(PWebAuthConfig.SSR_UNAUTHORIZED_REDIRECT_URL)
         return self.call_acl_interceptor(pweb_ssr_auth=pweb_ssr_auth, is_api=False)
 
@@ -44,7 +44,7 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
         return self.check_ssr_auth()
 
     def check_url_start_with(self, request_url):
-        url_list = PWebAuthRegistry.SKIP_START_WITH_URL_LIST
+        url_list = PWebAuthRegistry.get_skip_start_with_url_list()
         for url in url_list:
             if request_url.startswith(url):
                 return True
@@ -52,7 +52,7 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
 
     def is_url_in_skip_list(self):
         relative_url = self.get_relative_url()
-        skip_url_list = PWebAuthRegistry.SKIP_URL_LIST
+        skip_url_list = PWebAuthRegistry.get_skip_url_list()
         if relative_url in skip_url_list or self.check_url_start_with(relative_url):
             return True
         return False

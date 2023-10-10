@@ -79,10 +79,10 @@ class PWebAuthInit:
             PWebAuthConfig.AUTH_INTERCEPTOR = PWebAuthInterceptor()
 
         if PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH and isinstance(PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH, list):
-            PWebAuthRegistry.SKIP_START_WITH_URL_LIST += PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH
+            PWebAuthRegistry.add_start_with_url_list_in_skip(PWebAuthConfig.SKIP_START_WITH_URL_FROM_AUTH)
 
         if PWebAuthConfig.SKIP_URL_FROM_AUTH and isinstance(PWebAuthConfig.SKIP_URL_FROM_AUTH, list):
-            PWebAuthRegistry.SKIP_URL_LIST += PWebAuthConfig.SKIP_URL_FROM_AUTH
+            PWebAuthRegistry.add_url_list_in_skip(PWebAuthConfig.SKIP_URL_FROM_AUTH)
 
         PWebAuthRegistry.add_url_in_skip(PWebAuthConfig.SSR_UNAUTHORIZED_REDIRECT_URL)
         pweb_app.before_request_funcs.setdefault(None, []).append(PWebAuthConfig.AUTH_INTERCEPTOR.intercept)
