@@ -23,6 +23,7 @@ class PWebAuthConfig:
     # Auth
     SYSTEM_AUTH_BASE: AuthBase = AuthBase.EMAIL
     LOGIN_DTO: PWebRestDTO = None
+    LOGIN_RESPONSE_DTO: PWebRestDTO = None
     FORGOT_PASSWORD_DTO: PWebRestDTO = None
     OPERATOR_CREATE_DTO: PWebRestDTO = None
     OPERATOR_UPDATE_DTO: PWebRestDTO = None
@@ -32,6 +33,7 @@ class PWebAuthConfig:
     IS_ENABLE_AUTH: bool = True
     SSR_UNAUTHORIZED_REDIRECT_URL = "/auth/login"
     REST_URL_START_WITH = "api"
+    REFRESH_TOKEN_NAME = "REFRESH_TOKEN"
     SKIP_URL_FROM_AUTH: list = []
     SKIP_START_WITH_URL_FROM_AUTH: list = []
     AUTH_SKIP_URL_CHECKER: PWebAuthSkipURLChecker = None

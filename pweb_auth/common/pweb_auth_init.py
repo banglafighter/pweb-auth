@@ -5,11 +5,13 @@ from pweb_auth.data.pweb_auth_registry import PWebAuthRegistry
 from pweb_auth.form_dto.pweb_auth_dto import OperatorReadDefaultDTO, ForgotPasswordEmailBaseDefaultDTO, \
     ForgotPasswordUsernameBaseDefaultDTO, OperatorCreateEmailBaseDefaultDTO, OperatorUpdateEmailBaseDefaultDTO, \
     OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO, LoginUsernameBaseDefaultDTO, \
-    LoginEmailBaseDefaultDTO
+    LoginEmailBaseDefaultDTO, LoginResponseDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.security.pweb_auth_interceptor import PWebAuthInterceptor
+from pweb_auth.service.operator_api_service import OperatorAPIService
 from pweb_auth.service.operator_ssr_service import OperatorSSRService
+from pweb_form_rest import RESTDataCRUD
 from pweb_form_rest.crud.pweb_form_data_crud import FormDataCRUD
 
 
@@ -53,6 +55,9 @@ class PWebAuthInit:
         if not PWebAuthConfig.OPERATOR_READ_DTO:
             PWebAuthConfig.OPERATOR_READ_DTO = OperatorReadDefaultDTO
 
+        if not PWebAuthConfig.LOGIN_RESPONSE_DTO:
+            PWebAuthConfig.LOGIN_RESPONSE_DTO = LoginResponseDefaultDTO
+
         if not PWebAuthConfig.LOGIN_DTO:
             PWebAuthConfig.LOGIN_DTO = self._select_dto_by_system_auth_base(username_base=LoginUsernameBaseDefaultDTO, email_base=LoginEmailBaseDefaultDTO)
 
@@ -67,6 +72,7 @@ class PWebAuthInit:
 
     def init_service_dependencies(self):
         OperatorSSRService.form_data_crud = FormDataCRUD(model=PWebAuthConfig.OPERATOR_MODEL)
+        OperatorAPIService.rest_data_crud = RESTDataCRUD(model=PWebAuthConfig.OPERATOR_MODEL)
 
     def init_auth_interceptor(self, pweb_app):
         if not PWebAuthConfig.IS_ENABLE_AUTH or not pweb_app:

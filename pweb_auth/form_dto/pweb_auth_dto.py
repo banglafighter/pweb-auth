@@ -1,5 +1,4 @@
 from marshmallow import fields, validates_schema
-from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.data.pweb_auth_enum import OperatorStatus, OperatorAccessType
 from pweb_auth.security.pweb_security_util import PWebSecurityUtil
 from pweb_form_rest import PWebForm, EnumField
