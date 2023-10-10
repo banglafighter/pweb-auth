@@ -1,5 +1,15 @@
 from abc import ABC, abstractmethod
+from typing import Tuple
 from pweb_auth.model.operator_abc import OperatorAbc
+from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth
+
+
+class PWebAuthSkipURLChecker(ABC):
+
+    @abstractmethod
+    def check(self) -> Tuple[list, list]:
+        # Return skip_url_list, skip_start_with_url_list
+        pass
 
 
 class PWebAuthBaseInterceptor(ABC):
@@ -26,7 +36,7 @@ class PWebAuthCustomLogin(ABC):
 class PWebAuthInterceptOnACLCheck(ABC):
 
     @abstractmethod
-    def perform(self):
+    def perform(self, payload=None, pweb_ssr_auth: PWebSSRAuth = None, is_api: bool = False):
         pass
 
 

@@ -1,6 +1,6 @@
 from pweb_auth.common.pweb_auth_interceptor_abc import PWebAuthInterceptOnLogin, PWebAuthCustomLogin, \
     PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken, \
-    PWebAuthBaseInterceptor
+    PWebAuthBaseInterceptor, PWebAuthSkipURLChecker
 from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest, \
     PWebAuthNotifyOnResetPasswordFailed, PWebAuthNotifyOnResetPasswordSuccess, PWebAuthNotifyOnLoginFailed, \
     PWebAuthNotifyOnLoginSuccess, PWebAuthNotifyOnCreateOperator
@@ -35,6 +35,7 @@ class PWebAuthConfig:
     REST_URL_START_WITH = "api"
     SKIP_URL_FROM_AUTH: list = []
     SKIP_START_WITH_URL_FROM_AUTH: list = []
+    AUTH_SKIP_URL_CHECKER: PWebAuthSkipURLChecker = None
     AUTH_INTERCEPTOR: PWebAuthBaseInterceptor = None
     AUTH_INTERCEPT_ON_LOGIN: PWebAuthInterceptOnLogin = None
     AUTH_CUSTOM_LOGIN: PWebAuthCustomLogin = None

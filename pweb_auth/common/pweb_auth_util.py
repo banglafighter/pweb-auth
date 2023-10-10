@@ -1,12 +1,20 @@
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.common.pweb_auth_interceptor_abc import PWebAuthCustomLogin, PWebAuthInterceptOnLogin, \
-    PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken
+    PWebAuthInterceptOnACLCheck, PWebAuthInterceptOnTokenGeneration, PWebAuthInterceptOnRenewToken, \
+    PWebAuthSkipURLChecker
 from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest, \
     PWebAuthNotifyOnResetPasswordFailed, PWebAuthNotifyOnResetPasswordSuccess, PWebAuthNotifyOnLoginFailed, \
     PWebAuthNotifyOnLoginSuccess, PWebAuthNotifyOnCreateOperator
 
 
 class PWebAuthUtil:
+
+    @staticmethod
+    def skip_url_checker() -> PWebAuthSkipURLChecker | None:
+        if PWebAuthConfig.AUTH_SKIP_URL_CHECKER and isinstance(PWebAuthConfig.AUTH_SKIP_URL_CHECKER, PWebAuthSkipURLChecker):
+            return PWebAuthConfig.AUTH_SKIP_URL_CHECKER
+        return None
+
     @staticmethod
     def custom_login() -> PWebAuthCustomLogin | None:
         if PWebAuthConfig.AUTH_CUSTOM_LOGIN and isinstance(PWebAuthConfig.AUTH_CUSTOM_LOGIN, PWebAuthCustomLogin):
