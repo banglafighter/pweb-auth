@@ -10,6 +10,8 @@ class OperatorReadDefaultDTO(PWebForm):
     name = fields.String(required=True, error_messages={"required": "Please enter name"})
     email = fields.Email(required=True, error_messages={"required": "Please enter email."})
     username = fields.String(required=True, error_messages={"required": "Please enter username."})
+    status = EnumField(OperatorStatus, required=True, error_messages={"required": "Please select status"}, placeholder="Select status", defaultValue="Active")
+    accessType = EnumField(OperatorAccessType, required=True, error_messages={"required": "Please select access"}, placeholder="Select access type")
 
 
 class OperatorBaseDefaultDTO(PWebForm):
@@ -68,7 +70,7 @@ class RefreshTokenDefaultDTO(PWebForm):
 
 class LoginResponseDefaultDTO(PWebForm):
     token = fields.Nested(LoginTokenDefaultDTO)
-    operator = fields.Nested(PWebAuthConfig.LOGIN_RESPONSE_DTO)
+    operator = fields.Nested(OperatorReadDefaultDTO())
 
 
 class RefreshTokenResponseDefaultDTO(PWebForm):
