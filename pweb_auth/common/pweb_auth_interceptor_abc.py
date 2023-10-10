@@ -43,12 +43,12 @@ class PWebAuthInterceptOnACLCheck(ABC):
 class PWebAuthInterceptOnTokenGeneration(ABC):
 
     @abstractmethod
-    def perform(self):
+    def perform(self, response: dict, operator):
         pass
 
 
 class PWebAuthInterceptOnRenewToken(ABC):
 
     @abstractmethod
-    def perform(self):
+    def perform(self, token: dict, jwt_payload: dict) -> dict:
         pass
