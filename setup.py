@@ -9,17 +9,17 @@ env = os.environ.get('source')
 
 
 def get_dependencies():
-    dependency = []
+    dependency = ["bcrypt==4.0.1", "PyJWT==2.8.0"]
 
-    if env and env == "dev":
+    if env and env == "code":
         return dependency
 
-    return dependency + []
+    return dependency + ["pweb-orm", "pweb-form-rest", "ppy-jsonyml"]
 
 
 setup(
     name='pweb-auth',
-    version='1.0.0',
+    version='0.0.2',
     url='https://github.com/problemfighter/pweb-auth',
     license='Apache 2.0',
     author='Problem Fighter',
