@@ -20,10 +20,10 @@ def get_dependencies():
 setup(
     name='pweb-auth',
     version='0.0.2',
-    url='https://github.com/problemfighter/pweb-auth',
+    url='https://github.com/banglafighter/pweb-auth',
     license='Apache 2.0',
-    author='Problem Fighter',
-    author_email='problemfighter.com@gmail.com',
+    author='Bangla Fighter',
+    author_email='banglafighter.com@gmail.com',
     description='PWeb authentication system, which allow to manage application basic level authentication, but it can be extensible',
     long_description=README,
     long_description_content_type='text/markdown',
