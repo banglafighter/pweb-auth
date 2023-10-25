@@ -32,7 +32,7 @@ class PWebAuthConfig:
     # Auth Interceptors
     IS_ENABLE_AUTH: bool = True
     SSR_UNAUTHORIZED_REDIRECT_URL = "/auth/login"
-    REST_URL_START_WITH = "api"
+    REST_URL_START_WITH = "/api"
     REFRESH_TOKEN_NAME = "REFRESH_TOKEN"
     SKIP_URL_FROM_AUTH: list = []
     SKIP_START_WITH_URL_FROM_AUTH: list = []
