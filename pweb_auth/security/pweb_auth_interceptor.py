@@ -31,7 +31,7 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
     def call_acl_interceptor(self, payload=None, pweb_ssr_auth: PWebSSRAuth = None, is_api: bool = False):
         on_acl_check = PWebAuthUtil.on_acl_check()
         if on_acl_check:
-            return on_acl_check.perform(payload=payload, pweb_ssr_auth=pweb_ssr_auth, is_api=is_api)
+            return on_acl_check.perform(request_info=self.request_info, payload=payload, pweb_ssr_auth=pweb_ssr_auth, is_api=is_api)
 
     def check_rest_auth(self):
         bearer_token = self.request_data.get_bearer_token()
