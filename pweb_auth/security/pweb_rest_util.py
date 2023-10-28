@@ -10,3 +10,4 @@ class PWebRESTUtil:
     def get_api_auth_data():
         bearer_token = PWebRESTUtil.request_data.get_bearer_token()
         return PWebRESTUtil.pweb_jwt.validate_token(bearer_token)
+
