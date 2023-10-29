@@ -1,3 +1,4 @@
+from typing import Union
 from ppy_common import DataUtil
 from ppy_jsonyml import ODConverter
 from ppy_jsonyml.converter.od_base import ODBase
@@ -45,7 +46,7 @@ class PWebSSRAuth:
             return auth_data.isLoggedIn
         return False
 
-    def get_auth_session(self) -> PWebSSRAuthData | None:
+    def get_auth_session(self) -> Union[PWebSSRAuthData, None]:
         session_auth_data = PWebSession.get(self._AUTH_SESSION_KEY)
         if not session_auth_data or not isinstance(session_auth_data, dict):
             return None
