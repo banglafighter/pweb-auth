@@ -1,3 +1,5 @@
+from typing import Union
+
 from flask import redirect, flash
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.common.pweb_auth_interceptor_abc import PWebAuthBaseInterceptor
@@ -49,7 +51,7 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
         return self.response_maker.error_message(message, "4100", 401)
 
     def check_ssr_auth(self):
-        pweb_ssr_auth: PWebSSRAuth | None = PWebSSRAuth().get_auth_session()
+        pweb_ssr_auth: Union[PWebSSRAuth, None] = PWebSSRAuth().get_auth_session()
         if not pweb_ssr_auth or not PWebSSRAuth().is_logged_in():
             flash(PWebAuthConfig.LOGIN_FIRST_SM, "error")
             return redirect(PWebAuthConfig.SSR_UNAUTHORIZED_REDIRECT_URL)
