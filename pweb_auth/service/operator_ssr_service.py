@@ -74,7 +74,8 @@ class OperatorSSRService:
                 form.set_field_error("email", error_message)
             elif is_broken_integrity and auth_base == AuthBase.USERNAME:
                 form.set_field_error("username", error_message)
-            return data
+            else:
+                return data
         return None
 
     def create(self, view_name: str, create_action_url: str, failed_redirect_url: str):
