@@ -5,7 +5,8 @@ from pweb_auth.data.pweb_auth_registry import PWebAuthRegistry
 from pweb_auth.form_dto.pweb_auth_dto import OperatorReadDefaultDTO, ForgotPasswordEmailBaseDefaultDTO, \
     ForgotPasswordUsernameBaseDefaultDTO, OperatorCreateEmailBaseDefaultDTO, OperatorUpdateEmailBaseDefaultDTO, \
     OperatorCreateUsernameBaseDefaultDTO, OperatorUpdateUsernameBaseDefaultDTO, LoginUsernameBaseDefaultDTO, \
-    LoginEmailBaseDefaultDTO, LoginResponseDefaultDTO
+    LoginEmailBaseDefaultDTO, LoginResponseDefaultDTO, RegistrationEmailBaseDefaultDTO, \
+    RegistrationUsernameBaseDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.security.pweb_auth_interceptor import PWebAuthInterceptor
@@ -24,6 +25,19 @@ class PWebAuthInit:
         if PWebAuthConfig.SYSTEM_AUTH_BASE == AuthBase.USERNAME:
             return username_base
         return email_base
+
+    def init_registration_dto(self):
+        if PWebAuthConfig.REGISTRATION_DTO:
+            return
+
+        _RegistrationDTO = self._select_dto_by_system_auth_base(username_base=RegistrationUsernameBaseDefaultDTO, email_base=RegistrationEmailBaseDefaultDTO)
+
+        class RegistrationDTO(_RegistrationDTO):
+            class Meta:
+                model = PWebAuthConfig.OPERATOR_MODEL
+                load_instance = True
+
+        PWebAuthConfig.REGISTRATION_DTO = RegistrationDTO
 
     def init_create_operator_dto(self):
         if PWebAuthConfig.OPERATOR_CREATE_DTO:
@@ -66,6 +80,7 @@ class PWebAuthInit:
 
         self.init_create_operator_dto()
         self.init_update_operator_dto()
+        self.init_registration_dto()
 
     def merge_config(self, config):
         ObjectHelper.copy_config_property(config, pweb_auth.common.pweb_auth_config.PWebAuthConfig)

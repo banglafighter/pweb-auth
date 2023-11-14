@@ -28,6 +28,7 @@ class PWebAuthConfig:
     OPERATOR_CREATE_DTO: PWebRestDTO = None
     OPERATOR_UPDATE_DTO: PWebRestDTO = None
     OPERATOR_READ_DTO: PWebRestDTO = None
+    REGISTRATION_DTO: PWebRestDTO = None
 
     # Auth Interceptors
     IS_ENABLE_AUTH: bool = True

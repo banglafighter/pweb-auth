@@ -74,6 +74,8 @@ class OperatorSSRService:
                 form.set_field_error("email", error_message)
             elif is_broken_integrity and auth_base == AuthBase.USERNAME:
                 form.set_field_error("username", error_message)
+            return data
+        return None
 
     def create(self, view_name: str, create_action_url: str, failed_redirect_url: str):
         params = {"button": "Create", "action": create_action_url, "auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
@@ -97,3 +99,17 @@ class OperatorSSRService:
     def list(self, view_name, search_fields: list = None):
         params = {"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
         return self.form_data_crud.paginated_list(view_name=view_name, search_fields=search_fields, params=params)
+
+    def registration(self, view_name: str, response_view: str, form: PWebForm = None, params: dict = None):
+        render_view = view_name
+        if not form:
+            form = PWebAuthConfig.REGISTRATION_DTO()
+        data = self._check_unique(form=form)
+        if not params:
+            params = {}
+        params.update({"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name})
+        if data:
+            model = self.form_data_crud.save(data=data, request_dto=form)
+            if model and model.id:
+                render_view = response_view
+        return self.form_data_crud.render(view_name=render_view, params=params, form=form)

@@ -15,6 +15,18 @@ class OperatorReadDefaultDTO(PWebForm):
     coverPhoto = fields.String(allow_none=True)
 
 
+class RegistrationEmailBaseDefaultDTO(PWebForm):
+    name = fields.String(required=True, error_messages={"required": "Please enter name"})
+    email = fields.Email(required=True, error_messages={"required": "Please enter email."})
+    password = fields.String(required=True, error_messages={"required": "Please enter password."}, type="password")
+
+
+class RegistrationUsernameBaseDefaultDTO(PWebForm):
+    name = fields.String(required=True, error_messages={"required": "Please enter name"})
+    username = fields.String(required=True, error_messages={"required": "Please enter username."})
+    password = fields.String(required=True, error_messages={"required": "Please enter password."}, type="password")
+
+
 class OperatorBaseDefaultDTO(PWebForm):
     name = fields.String(required=True, error_messages={"required": "Please enter name"})
     status = EnumField(OperatorStatus, required=True, error_messages={"required": "Please select status"}, placeholder="Select status", defaultValue="Active")
