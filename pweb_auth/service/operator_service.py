@@ -143,7 +143,7 @@ class OperatorService:
 
     def change_password(self, operator_id, current_password, new_password):
         operator = self.get_operator_by_id(model_id=operator_id)
-        if not operator:
+        if not operator or not current_password or not new_password:
             return False
 
         if not operator.verify_password(current_password):

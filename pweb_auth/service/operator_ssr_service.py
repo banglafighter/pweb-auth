@@ -1,7 +1,7 @@
 from flask import redirect, flash
 from ppy_common import DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
-from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
+from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO, ChangePasswordDefaultDTO
 from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth, PWebSSRAuthData
 from pweb_auth.service.operator_service import OperatorService
 from pweb_form_rest import PWebForm
@@ -64,7 +64,7 @@ class OperatorSSRService:
             self.form_data_crud.handle_various_exception(exception=e, form=form)
         return self.form_data_crud.render(view_name=render_view, params=params, form=form)
 
-    def _check_unique(self, form: PWebForm, model_id: int = None):
+    def check_unique(self, form: PWebForm, model_id: int = None):
         if form.is_post_data() and form.is_valid_data():
             data = form.get_request_data()
             is_broken_integrity = self.operator_service.is_operator_integrity_broken(request_data=data, model_id=model_id)
@@ -81,13 +81,13 @@ class OperatorSSRService:
     def create(self, view_name: str, create_action_url: str, failed_redirect_url: str):
         params = {"button": "Create", "action": create_action_url, "auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
         form = PWebAuthConfig.OPERATOR_CREATE_DTO()
-        self._check_unique(form=form)
+        self.check_unique(form=form)
         return self.form_data_crud.create(view_name=view_name, form=form, redirect_url=failed_redirect_url, params=params)
 
     def update(self, view_name, model_id: int, failed_redirect_url: str, update_action_url: str):
         params = {"button": "Update", "action": update_action_url, "auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name}
         update_form = PWebAuthConfig.OPERATOR_UPDATE_DTO()
-        self._check_unique(form=update_form, model_id=model_id)
+        self.check_unique(form=update_form, model_id=model_id)
         return self.form_data_crud.update(view_name=view_name, model_id=model_id, redirect_url=failed_redirect_url, update_form=update_form, params=params)
 
     def delete(self, model_id: int, redirect_url: str):
@@ -105,7 +105,7 @@ class OperatorSSRService:
         render_view = view_name
         if not form:
             form = PWebAuthConfig.REGISTRATION_DTO()
-        data = self._check_unique(form=form)
+        data = self.check_unique(form=form)
         if not params:
             params = {}
         params.update({"auth_base": PWebAuthConfig.SYSTEM_AUTH_BASE.name})
@@ -114,6 +114,21 @@ class OperatorSSRService:
             if model and model.id:
                 render_view = response_view
         return self.form_data_crud.render(view_name=render_view, params=params, form=form)
+
+    def change_password(self, view_name: str, success_redirect: str, params: dict = None):
+        form = ChangePasswordDefaultDTO()
+        if form.is_valid_data_submit():
+            data = form.get_request_data()
+            auth_data: PWebSSRAuthData = self.pweb_ssr_auth.get_auth_session()
+            current_password = DataUtil.get_dict_value(data, "currentPassword")
+            new_password = DataUtil.get_dict_value(data, "newPassword")
+            is_success = self.operator_service.change_password(operator_id=auth_data.id, new_password=new_password, current_password=current_password)
+            if is_success:
+                flash("Successfully Changed Password", "success")
+                return redirect(success_redirect)
+            else:
+                flash("Unable to Change Password", "error")
+        return self.form_data_crud.render(view_name=view_name, form=form, params=params)
 
     def get_logged_in_operator(self):
         auth_data: PWebSSRAuthData = self.pweb_ssr_auth.get_auth_session()

@@ -100,8 +100,8 @@ class ResetPasswordDefaultDTO(PWebForm):
         PWebSecurityUtil.match_password(data=data)
 
 
-class ChangePasswordDefaultDTO(ResetPasswordDefaultDTO):
-    oldPassword = fields.String(required=True, error_messages={"required": "Please enter old password."}, type="password")
+class ChangePasswordDefaultDTO(PWebForm):
+    currentPassword = fields.String(required=True, error_messages={"required": "Please enter current password."}, type="password")
     newPassword = fields.String(required=True, error_messages={"required": "Please enter new password."}, type="password")
     confirmPassword = fields.String(required=True, error_messages={"required": "Please enter confirm password."}, type="password")
 
