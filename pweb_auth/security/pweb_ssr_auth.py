@@ -12,6 +12,9 @@ class PWebSSRAuthData(ODBase):
     name: str = None
     email: str = None
     username: str = None
+    title: str = None
+    sex: str = None
+    dob: str = None
     id: int = None
     uuid: str = None
     profilePhoto: str = None
