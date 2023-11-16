@@ -30,6 +30,11 @@ class PWebSSRAuth:
             return True
         return False
 
+    def update_session_data(self, operator):
+        existing_auth_data = self.get_auth_session()
+        if existing_auth_data:
+            self.add_data_to_session(operator, auth_data=existing_auth_data)
+
     def perform_login_process(self, operator):
         if not operator and not hasattr(operator, "id"):
             return False
