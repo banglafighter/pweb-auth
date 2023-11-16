@@ -2,7 +2,7 @@ from flask import redirect, flash
 from ppy_common import DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO
-from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth
+from pweb_auth.security.pweb_ssr_auth import PWebSSRAuth, PWebSSRAuthData
 from pweb_auth.service.operator_service import OperatorService
 from pweb_form_rest import PWebForm
 from pweb_auth.data.pweb_auth_enum import AuthBase
@@ -114,3 +114,9 @@ class OperatorSSRService:
             if model and model.id:
                 render_view = response_view
         return self.form_data_crud.render(view_name=render_view, params=params, form=form)
+
+    def get_logged_in_operator(self):
+        auth_data: PWebSSRAuthData = self.pweb_ssr_auth.get_auth_session()
+        if auth_data.id:
+            return self.form_data_crud.get_by_id(auth_data.id, exception=False)
+        return None
