@@ -1,4 +1,3 @@
-import pweb_auth.common.pweb_auth_config
 from ppy_common import ObjectHelper
 from pweb_auth.data.pweb_auth_enum import AuthBase
 from pweb_auth.data.pweb_auth_registry import PWebAuthRegistry
@@ -83,7 +82,7 @@ class PWebAuthInit:
         self.init_registration_dto()
 
     def merge_config(self, config):
-        ObjectHelper.copy_config_property(config, pweb_auth.common.pweb_auth_config.PWebAuthConfig)
+        ObjectHelper.copy_config_property(config, PWebAuthConfig)
 
     def init_service_dependencies(self):
         OperatorSSRService.form_data_crud = FormDataCRUD(model=PWebAuthConfig.OPERATOR_MODEL)
