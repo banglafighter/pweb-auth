@@ -19,6 +19,7 @@ class PWebSSRAuthData(ODBase):
     uuid: str = None
     profilePhoto: str = None
     coverPhoto: str = None
+    otherInfo: dict = None
 
 
 class PWebSSRAuth:
