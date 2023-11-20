@@ -135,3 +135,6 @@ class OperatorSSRService:
         if auth_data.id:
             return self.form_data_crud.get_by_id(auth_data.id, exception=False)
         return None
+
+    def update_session_data(self, operator):
+        self.pweb_ssr_auth.update_session_data(operator=operator)
