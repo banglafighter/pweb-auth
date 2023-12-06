@@ -9,7 +9,7 @@ class OperatorAbc(PwebModel):
     name = pweb_orm.Column("name", pweb_orm.String(100))
     email = pweb_orm.Column("email", pweb_orm.String(100), unique=True, index=True)
     username = pweb_orm.Column("username", pweb_orm.String(100), unique=True, index=True)
-    password_hash = pweb_orm.Column("password_hash", pweb_orm.String(150), nullable=False, index=True)
+    password_hash = pweb_orm.Column("password_hash", pweb_orm.String(400), nullable=False, index=True)
     isVerified = pweb_orm.Column("is_verified", pweb_orm.Boolean, default=True)
     status = pweb_orm.Column("status", pweb_orm.String(25), default="Active")
     accessType = pweb_orm.Column("access_type", pweb_orm.String(25), default="Operator")

@@ -11,6 +11,8 @@ class PWebSecurityUtil:
         if password:
             password = password.encode('utf8')
         hashed = bcrypt.hashpw(password, salt)
+        if hashed:
+            hashed = hashed.decode()
         return hashed
 
     @staticmethod
