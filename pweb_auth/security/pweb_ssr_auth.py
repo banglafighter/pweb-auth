@@ -17,6 +17,7 @@ class PWebSSRAuthData(ODBase):
     dob: str = None
     id: int = None
     uuid: str = None
+    accessType: str = None
     profilePhoto: str = None
     coverPhoto: str = None
     otherInfo: dict = None
