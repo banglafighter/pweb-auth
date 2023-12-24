@@ -5,13 +5,13 @@ from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPassword
     PWebAuthNotifyOnResetPasswordFailed, PWebAuthNotifyOnResetPasswordSuccess, PWebAuthNotifyOnLoginFailed, \
     PWebAuthNotifyOnLoginSuccess, PWebAuthNotifyOnCreateOperator
 from pweb_auth.data.pweb_auth_enum import AuthBase
-from pweb_auth.model.operator_abc import OperatorAbc
+from pweb_auth.model.operator_abc import OperatorBaseAbc
 from pweb_auth.model.operator_token_abc import OperatorTokenAbc
 from pweb_form_rest.schema.pweb_rest_schema import PWebRestDTO
 
 
 class PWebAuthConfig:
-    OPERATOR_MODEL: OperatorAbc = None
+    OPERATOR_MODEL: OperatorBaseAbc = None
     OPERATOR_TOKEN_MODEL: OperatorTokenAbc = None
 
     # JWT

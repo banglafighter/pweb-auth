@@ -1,10 +1,10 @@
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
-from pweb_auth.model.operator_abc import OperatorAbc
+from pweb_auth.model.operator_abc import OperatorAbc, OperatorBaseAbc
 from pweb_auth.model.operator_token_abc import OperatorTokenAbc
 
 
 class AuthModel:
-    operator: OperatorAbc = None
+    operator: OperatorBaseAbc = None
     operatorToken: OperatorTokenAbc = None
 
     def init(self):
