@@ -26,9 +26,9 @@ class PWebSecurityUtil:
         return False
 
     @staticmethod
-    def match_password(data, new_pass_key="newPassword", confirm_pass_key="confirmPassword", is_exception=True):
+    def match_password(data, new_pass_key="newPassword", confirm_pass_key="confirmPassword", is_exception=True, error_message="New password & confirm password not matched!"):
         if data and data[new_pass_key] == data[confirm_pass_key]:
             return True
         if not is_exception:
             return False
-        raise ValidationError("New password & confirm password not matched!", "confirmPassword")
+        raise ValidationError(error_message, "confirmPassword")
