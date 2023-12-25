@@ -1,5 +1,6 @@
 from ppy_common import PyCommon, DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
+from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest
 from pweb_auth.common.pweb_auth_util import PWebAuthUtil
 from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO, RefreshTokenDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
@@ -124,10 +125,10 @@ class OperatorAPIService:
         new_password = DataUtil.get_dict_value(data, "newPassword")
         is_reset = self.operator_service.set_password_by_token(token=token, new_password=new_password)
         if is_reset:
-            self.rest_data_crud.response_maker.success_message(message=PWebAuthConfig.SUCCESSFULLY_RESET_PASSWORD_SM)
+            return self.rest_data_crud.response_maker.success_message(message=PWebAuthConfig.SUCCESSFULLY_RESET_PASSWORD_SM)
         return self.rest_data_crud.response_maker.error_message(message=PWebAuthConfig.UNABLE_TO_RESET_PASSWORD_SM)
 
-    def forgot_password(self):
+    def forgot_password(self, processor: PWebAuthNotifyOnForgotPasswordRequest = None):
         data = self.rest_data_crud.get_json_data(PWebAuthConfig.FORGOT_PASSWORD_DTO())
-        self.operator_service.forgot_password(password_request=data)
+        self.operator_service.forgot_password(password_request=data, processor=processor)
         return self.rest_data_crud.response_maker.success_message(message=PWebAuthConfig.PASS_RESET_REQUEST_SEND_SM)

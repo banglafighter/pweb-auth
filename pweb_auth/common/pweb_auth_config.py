@@ -7,7 +7,7 @@ from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPassword
 from pweb_auth.data.pweb_auth_enum import AuthBase
 from pweb_auth.model.operator_abc import OperatorBaseAbc
 from pweb_auth.model.operator_token_abc import OperatorTokenAbc
-from pweb_form_rest.schema.pweb_rest_schema import PWebRestDTO
+from pweb_form_rest.schema.pweb_rest_schema import PWebOrmDTO
 
 
 class PWebAuthConfig:
@@ -22,13 +22,13 @@ class PWebAuthConfig:
 
     # Auth
     SYSTEM_AUTH_BASE: AuthBase = AuthBase.EMAIL
-    LOGIN_DTO: PWebRestDTO = None
-    LOGIN_RESPONSE_DTO: PWebRestDTO = None
-    FORGOT_PASSWORD_DTO: PWebRestDTO = None
-    OPERATOR_CREATE_DTO: PWebRestDTO = None
-    OPERATOR_UPDATE_DTO: PWebRestDTO = None
-    OPERATOR_READ_DTO: PWebRestDTO = None
-    REGISTRATION_DTO: PWebRestDTO = None
+    LOGIN_DTO: PWebOrmDTO = None
+    LOGIN_RESPONSE_DTO: PWebOrmDTO = None
+    FORGOT_PASSWORD_DTO: PWebOrmDTO = None
+    OPERATOR_CREATE_DTO: PWebOrmDTO = None
+    OPERATOR_UPDATE_DTO: PWebOrmDTO = None
+    OPERATOR_READ_DTO: PWebOrmDTO = None
+    REGISTRATION_DTO: PWebOrmDTO = None
 
     # Auth Interceptors
     IS_ENABLE_AUTH: bool = True

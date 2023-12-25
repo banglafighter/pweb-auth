@@ -1,4 +1,6 @@
 from ppy_common import DataUtil, PyCommon
+
+from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest
 from pweb_auth.common.pweb_auth_util import PWebAuthUtil
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
@@ -101,7 +103,7 @@ class OperatorService:
             operator = self.validate_password_and_get_operator(login_data=login_data)
         return self.intercept_login_data(operator=operator, login_data=login_data)
 
-    def forgot_password(self, password_request: dict):
+    def forgot_password(self, password_request: dict, processor: PWebAuthNotifyOnForgotPasswordRequest = None):
         operator = self.get_operator_by_dict_data(dict_data=password_request)
         if not operator:
             return False
@@ -114,6 +116,8 @@ class OperatorService:
         forgot_password_request = PWebAuthUtil.notify_on_forgot_password_request()
         if forgot_password_request:
             return forgot_password_request.perform(operator=operator, reset_token=token)
+        elif processor and isinstance(processor, PWebAuthNotifyOnForgotPasswordRequest):
+            return processor.perform(operator=operator, reset_token=token)
         return False
 
     def set_password_by_token(self, token: str, new_password: str):

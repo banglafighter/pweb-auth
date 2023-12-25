@@ -1,7 +1,7 @@
 from marshmallow import fields, validates_schema
 from pweb_auth.data.pweb_auth_enum import OperatorStatus, OperatorAccessType
 from pweb_auth.security.pweb_security_util import PWebSecurityUtil
-from pweb_form_rest import PWebForm, EnumField
+from pweb_form_rest import PWebForm, EnumField, PWebOrmDTO
 from pweb_orm import PWebORMUtil
 
 
@@ -72,22 +72,22 @@ class LoginEmailBaseDefaultDTO(PWebForm):
     password = fields.String(required=True, error_messages={"required": "Please enter password"}, type="password")
 
 
-class LoginTokenDefaultDTO(PWebForm):
+class LoginTokenDefaultDTO(PWebOrmDTO):
     accessToken = fields.String(dump_only=True)
     refreshToken = fields.String(dump_only=True)
 
 
-class RefreshTokenDefaultDTO(PWebForm):
+class RefreshTokenDefaultDTO(PWebOrmDTO):
     refreshToken = fields.String(required=True, error_messages={"required": "Please enter refresh token."})
 
 
-class LoginResponseDefaultDTO(PWebForm):
-    token = fields.Nested(LoginTokenDefaultDTO)
+class LoginResponseDefaultDTO(PWebOrmDTO):
+    token = fields.Nested(LoginTokenDefaultDTO())
     operator = fields.Nested(OperatorReadDefaultDTO())
 
 
-class RefreshTokenResponseDefaultDTO(PWebForm):
-    token = fields.Nested(LoginTokenDefaultDTO)
+class RefreshTokenResponseDefaultDTO(PWebOrmDTO):
+    token = fields.Nested(LoginTokenDefaultDTO())
 
 
 class ResetPasswordDefaultDTO(PWebForm):
