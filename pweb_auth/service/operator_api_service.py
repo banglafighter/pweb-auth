@@ -2,7 +2,7 @@ from ppy_common import PyCommon, DataUtil
 from pweb_auth.common.pweb_auth_config import PWebAuthConfig
 from pweb_auth.common.pweb_auth_notify_abc import PWebAuthNotifyOnForgotPasswordRequest
 from pweb_auth.common.pweb_auth_util import PWebAuthUtil
-from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO, RefreshTokenDefaultDTO
+from pweb_auth.form_dto.pweb_auth_dto import ResetPasswordDefaultDTO, RefreshTokenDefaultDTO, ChangePasswordDefaultDTO
 from pweb_auth.model.pweb_auth_model import AuthModel
 from pweb_auth.security.pweb_jwt import PWebJWT
 from pweb_auth.service.operator_service import OperatorService
@@ -132,3 +132,14 @@ class OperatorAPIService:
         data = self.rest_data_crud.get_json_data(PWebAuthConfig.FORGOT_PASSWORD_DTO())
         self.operator_service.forgot_password(password_request=data, processor=processor)
         return self.rest_data_crud.response_maker.success_message(message=PWebAuthConfig.PASS_RESET_REQUEST_SEND_SM)
+
+    def change_password(self):
+        from pweb_auth import PWebRESTUtil
+        operator_id = PWebRESTUtil.get_operator_id_from_payload()
+        data = self.rest_data_crud.get_json_data(ChangePasswordDefaultDTO())
+        current_password = DataUtil.get_dict_value(data, "currentPassword")
+        new_password = DataUtil.get_dict_value(data, "newPassword")
+        is_changed = self.operator_service.change_password(operator_id=operator_id, new_password=new_password, current_password=current_password)
+        if is_changed:
+            return self.rest_data_crud.response_maker.success_message(message=PWebAuthConfig.CHANGE_PASSWORD_SUCCESS_SM)
+        return self.rest_data_crud.response_maker.error_message(message=PWebAuthConfig.CHANGE_PASSWORD_FAILED_SM)

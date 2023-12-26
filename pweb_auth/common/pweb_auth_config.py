@@ -61,6 +61,8 @@ class PWebAuthConfig:
     CHECK_VALIDATION_ERROR_SM = "Please check the validation error"
     UNABLE_PROCESS_LOGIN_SM = "Please check your data. Unable to process login"
     PASS_RESET_REQUEST_SEND_SM = "Password Reset Request Send"
+    CHANGE_PASSWORD_SUCCESS_SM = "Successfully Changed Password"
+    CHANGE_PASSWORD_FAILED_SM = "Unable to Change Password"
     SUCCESSFULLY_RESET_PASSWORD_SM = "Successfully Password Reset!"
     UNABLE_TO_RESET_PASSWORD_SM = "Unable to reset password"
     INVALID_TOKEN_SM = "Invalid Token"
