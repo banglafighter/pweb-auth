@@ -30,12 +30,18 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
             return True
         return False
 
+    def is_assets_request(self) -> bool:
+        relative_url = self.get_relative_url()
+        if relative_url.startswith(PWebAuthConfig.ASSET_URL_START_WITH):
+            return True
+        return False
+
     def call_acl_interceptor(self, payload=None, pweb_ssr_auth: PWebSSRAuth = None, is_api: bool = False):
         on_acl_check = PWebAuthUtil.on_acl_check()
         if on_acl_check:
             return on_acl_check.perform(request_info=self.request_info, payload=payload, pweb_ssr_auth=pweb_ssr_auth, is_api=is_api)
 
-    def check_rest_auth(self):
+    def check_rest_auth(self, is_assets_request: bool = False):
         bearer_token = self.request_data.get_bearer_token()
         if not bearer_token:
             bearer_token = self.request_data.get_query_args_value("auth-token")
@@ -45,6 +51,8 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
         payload = self.pweb_jwt.validate_token(bearer_token)
         if not payload:
             return self.get_error_response()
+        if is_assets_request:
+            return
         return self.call_acl_interceptor(payload=payload, is_api=True)
 
     def get_error_response(self, message=PWebAuthConfig.NOT_AUTHORIZE_SM):
@@ -60,6 +68,8 @@ class PWebAuthInterceptor(PWebAuthBaseInterceptor):
     def check_auth(self):
         if self.is_rest_request():
             return self.check_rest_auth()
+        elif self.is_assets_request():
+            return self.check_rest_auth(is_assets_request=True)
         return self.check_ssr_auth()
 
     def check_url_start_with(self, request_url, tenant: str = "default", url_list: list = None):
